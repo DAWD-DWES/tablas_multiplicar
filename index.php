@@ -1,23 +1,22 @@
 <?php
 define('PETICION_INVALIDA', 'La petición no es válida.');
-if (!empty($_POST)) {
-    $numberString = trim(filter_input(INPUT_POST, 'number_string', FILTER_UNSAFE_RAW));
-    $numberStringValid = filter_var($numberString, FILTER_VALIDATE_REGEXP, ['options' => ['regexp' => "/^(([1-9],)|([1-9]-[1-9],))*(([1-9])|([1-9]-[1-9]))$/"]]);
-    if ($numberStringValid !== false) {
-        $numsOrRanges = explode(",", $numberString);
-        $nums = [];
-        foreach ($numsOrRanges as $numOrRange) {
-            if (strpos($numOrRange, "-") !== false) {
-                $limsRange = explode("-", $numOrRange);
-                $range = range($limsRange[0], $limsRange[1]);
-                $nums = array_merge($nums, $range);
+if (filter_has_var(INPUT_POST, 'boton_envio')) {
+    $cadenaNumeros = trim(filter_input(INPUT_POST, 'cadena_rango', FILTER_UNSAFE_RAW));
+    $cadenaNumerosValid = filter_var($cadenaNumeros, FILTER_VALIDATE_REGEXP, ['options' => ['regexp' => "/^(([1-9],)|([1-9]-[1-9],))*(([1-9])|([1-9]-[1-9]))$/"]]);
+    if ($cadenaNumerosValid !== false) {
+        $numerosORangos = explode(",", $cadenaNumeros);
+        $numeros = [];
+        foreach ($numerosORangos as $numeroORango) {
+            if (strpos($numeroORango, "-") !== false) {
+                $limiteRango = explode("-", $numeroORango);
+                $rango = range($limiteRango[0], $limiteRango[1]);
+                $numeros = array_merge($numeros, $rango);
             } else {
-                $nums[] = (int) ($numOrRange);
+                $numeros[] = (int) ($numeroORango);
             }
         }
-
-        $nums = array_unique($nums);
-        sort($nums);
+        $numeros = array_unique($numeros);
+        sort($numeros);
     }
 }
 ?>
@@ -39,30 +38,30 @@ if (!empty($_POST)) {
                     <div class = "form-section">
                         <div class="input-section">
                             <label for = "numbers">Introduce los números:</Label>
-                            <input id = "number_string" type="text" name="number_string" placeholder="ie, 1,3,5,7-9" value="<?= ($numberString ?? '') ?>"/>
-                            <span class="error <?= (isset($numberStringValid) && !$numberStringValid) ? 'error-visible' : '' ?>">
+                            <input id = "cadena_rango" type="text" name="cadena_rango" placeholder="ie, 1,3,5,7-9" value="<?= ($cadenaNumeros ?? '') ?>"/>
+                            <span class="error <?= (isset($cadenaNumerosValid) && !$cadenaNumerosValid) ? 'error-visible' : '' ?>">
                                 <?= constant("PETICION_INVALIDA") ?>
                             </span> 
-                            <!--    <?php if (isset($numberStringValid) && !$numberStringValid): ?>
-                                        <p class="error">The </p>
+                            <!--    <?php if (isset($cadenaNumerosValid) && !$cadenaNumerosValid): ?>
+                                            <p class="error">The </p>
                             <?php endif ?> -->
                         </div>
                         <div class="submit-section">
                             <input class="submit" type="submit" 
-                                   value="Send" name="button" /> 
+                                   value="Envía" name="boton_envio" /> 
                         </div>
                     </div>
                 </form>   
-                <?php if (isset($nums)): ?>
+                <?php if (isset($numeros)): ?>
                     <h1>Las tablas de multiplicar solicitadas son:</h1>
                     <div class="info">
-                        <?php foreach ($nums as $num): ?>
+                        <?php foreach ($numeros as $numero): ?>
 
                             <table class="mult">
-                                <th>Table of <?= $num ?></th>
+                                <th>Tabla del <?= $numero ?></th>
                                 <?php for ($n = 1; $n <= 10; $n++): ?>
                                     <tr>
-                                        <td><?= "$num x $n = " . ($num * $n) ?></td>
+                                        <td><?= "$numero x $n = " . ($numero * $n) ?></td>
                                     </tr>
                                 <?php endfor ?>
                             </table>
