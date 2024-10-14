@@ -42,9 +42,6 @@ if (filter_has_var(INPUT_POST, 'boton_envio')) {
                             <span class="error <?= (isset($cadenaNumerosValid) && !$cadenaNumerosValid) ? 'error-visible' : '' ?>">
                                 <?= constant("PETICION_INVALIDA") ?>
                             </span> 
-                            <!--    <?php if (isset($cadenaNumerosValid) && !$cadenaNumerosValid): ?>
-                                            <p class="error">The </p>
-                            <?php endif ?> -->
                         </div>
                         <div class="submit-section">
                             <input class="submit" type="submit" 
